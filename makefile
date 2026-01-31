@@ -9,5 +9,5 @@ tokeniser.o:	tokeniser.cpp
 compilateur:	compilateur.cpp tokeniser.o
 		g++ -ggdb -o compilateur compilateur.cpp tokeniser.o
 test:		compilateur test.asm
-		./compilateur test.asm
+		./compilateur test.asm test
 

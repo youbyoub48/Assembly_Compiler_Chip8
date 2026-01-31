@@ -10,6 +10,8 @@ using namespace std;
 
 TOKEN current;
 
+int rom_file;
+
 
 FlexLexer* lexer = new yyFlexLexer; // This is the flex tokeniser
 // tokens can be read using lexer->yylex()
@@ -22,8 +24,16 @@ void Error(string s){
 	exit(-1);
 }
 
+void writeOpcode(unsigned short opcode){
+    unsigned char opcodeSplit[2];
+    opcodeSplit[0] = opcode >> 8;
+    opcodeSplit[1] = opcode & 0x00FF;
+
+    write(rom_file,opcodeSplit,2);
+}
+
 void CLS(){
-    cout << "erase" << endl;
+    writeOpcode(0x00E0);
 }
 
 void processInstruction(){
@@ -38,14 +48,21 @@ void processInstruction(){
 int main(int argc, char **argv){
     if(argc < 2){
         cerr << "assembly file is missing from the arguments" << endl;
-        return 1;
+        return -1;
+    }
+    if(argc < 3){
+        cerr << "rom file destination is missing from the arguments" << endl;
+        return -1;
     }
     
-    int fich;
-    fich = open(argv[1],O_RDWR);
+    int asm_file;
+    asm_file = open(argv[1],O_RDONLY);
     close(0);
-    dup(fich);
-    close(fich);
+    dup(asm_file);
+    close(asm_file);
+
+    creat(argv[2],0777);
+    rom_file = open(argv[2],O_RDWR);
 
     current=(TOKEN) lexer->yylex();
     processInstruction();
