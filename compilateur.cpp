@@ -36,6 +36,10 @@ void CLS(){
     writeOpcode(0x00E0);
 }
 
+void RET(){
+    writeOpcode(0x00EE);
+}
+
 void processInstruction(){
     if(current != INSTRUCTION) Error("expected instruction");
 

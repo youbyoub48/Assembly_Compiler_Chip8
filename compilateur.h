@@ -4,7 +4,9 @@
 typedef void (*func)();
 
 void CLS();
+void RET();
 
 std::map<std::string,func> instructions = {
-    {"CLS",&CLS}
+    {"CLS",&CLS},
+    {"RET",&RET},
 };
