@@ -24,12 +24,14 @@ alpha   [A-Za-z]
 digit   [0-9]
 number  {digit}+
 label	{alpha}({alpha}|{digit})*
+address 0x({alpha}|{digit})*
 unknown [^\"A-Za-z0-9 \n\r\t\(\)\<\>\=\!\%\&\|\}\-\;\.]+
 instruction ("CLS"|"RET"|"SYS"|"JP"|"CALL"|"SE"|"SNE"|"LD"|"ADD"|"OR"|"AND"|"XOR"|"SUB"|"SHR"|"SUBN"|"SHL"|"RND"|"DRW"|"SKP"|"SKNP")
 
 %%
 
 {instruction}	return INSTRUCTION;
+{address}	return ADDRESS;
 {number}	return NUMBER;
 {label}		return LABEL;
 ":"		return COLON;

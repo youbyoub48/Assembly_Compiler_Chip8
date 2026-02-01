@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sstream>
 
 #include "compilateur.h"
 #include "tokeniser.h"
@@ -24,7 +25,7 @@ void Error(string s){
 	exit(-1);
 }
 
-void writeOpcode(unsigned short opcode){
+void writeOpcode(u_int16_t opcode){
     unsigned char opcodeSplit[2];
     opcodeSplit[0] = opcode >> 8;
     opcodeSplit[1] = opcode & 0x00FF;
@@ -38,6 +39,19 @@ void CLS(){
 
 void RET(){
     writeOpcode(0x00EE);
+}
+
+void SYS(){
+    u_int16_t opcode;
+    stringstream ss;
+
+    current=(TOKEN) lexer->yylex();
+    if(current != ADDRESS) Error("expected address");  
+    
+    ss << hex << &lexer->YYText()[2];
+    ss >> opcode;
+    
+    writeOpcode(opcode);
 }
 
 void processInstruction(){

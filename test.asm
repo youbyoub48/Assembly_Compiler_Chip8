@@ -1,2 +1,1 @@
-RET
-CLS
+SYS 0xFFF
