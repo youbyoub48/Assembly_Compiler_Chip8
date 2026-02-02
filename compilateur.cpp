@@ -33,6 +33,10 @@ void writeOpcode(u_int16_t opcode){
     write(rom_file,opcodeSplit,2);
 }
 
+void validateAddress(int address){
+    if(address > MAXADDRESS) Error("address is out memory");
+}
+
 void CLS(){
     writeOpcode(0x00E0);
 }
@@ -50,8 +54,23 @@ void SYS(){
     
     ss << hex << &lexer->YYText()[2];
     ss >> opcode;
+    validateAddress(opcode);
     
     writeOpcode(opcode);
+}
+
+void JP(){
+    u_int16_t opcode;
+    stringstream ss;
+
+    current=(TOKEN) lexer->yylex();
+    if(current != ADDRESS) Error("expected address");  
+    
+    ss << hex << &lexer->YYText()[2];
+    ss >> opcode;
+    validateAddress(opcode);
+
+    writeOpcode(opcode + 0x1000);
 }
 
 void processInstruction(){
