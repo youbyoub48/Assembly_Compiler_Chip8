@@ -73,6 +73,20 @@ void JP(){
     writeOpcode(opcode + 0x1000);
 }
 
+void CALL(){
+    u_int16_t opcode;
+    stringstream ss;
+
+    current=(TOKEN) lexer->yylex();
+    if(current != ADDRESS) Error("expected address");  
+    
+    ss << hex << &lexer->YYText()[2];
+    ss >> opcode;
+    validateAddress(opcode);
+
+    writeOpcode(opcode + 0x2000);
+}
+
 void processInstruction(){
     if(current != INSTRUCTION) Error("expected instruction");
 
